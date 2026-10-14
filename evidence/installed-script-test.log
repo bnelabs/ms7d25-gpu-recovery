@@ -1,0 +1,14 @@
+2026-10-14 18:58:05 Reset scope changed: {'0000:01:00.1', '0000:00:01.0:pcie010', '0000:01:00.0', '0000:00:01.0:pcie001'}
+2026-10-14 18:58:18 Unloading old NVIDIA state
+2026-10-14 18:58:19 Pulsing the GPU-only GPP_E2 PERST gate
+2026-10-14 18:58:24 GPU: NVIDIA GeForce RTX 3090
+Compute capability: 8.6
+VRAM: 23.610 GiB
+SMs: 82
+Unified addressing: 1
+Managed memory: 1
+Pinned host -> GPU: 14.831 GB/s (payload only)
+GPU -> pinned host: 14.560 GB/s (payload only)
+GPU -> GPU: 421.178 GB/s (payload only)
+Transfer correctness check: passed
+2026-10-14 18:58:24 GPU recovery verified by CUDA; Linux boot unchanged: b5f63608-9751-454b-864e-2a0b648a2dc7

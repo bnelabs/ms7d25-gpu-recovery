@@ -1,0 +1,152 @@
+
+/home/komedi/gpu-recovery-research/nvidia-modeset-installed.ko:     file format elf64-x86-64
+
+
+Disassembly of section .text:
+
+0000000000035ce0 <nvEvoMakeRoom>:
+   35ce0:	f3 0f 1e fa          	endbr64
+   35ce4:	41 57                	push   %r15
+   35ce6:	41 56                	push   %r14
+   35ce8:	41 89 f6             	mov    %esi,%r14d
+   35ceb:	41 55                	push   %r13
+   35ced:	41 54                	push   %r12
+   35cef:	55                   	push   %rbp
+   35cf0:	53                   	push   %rbx
+   35cf1:	48 89 fb             	mov    %rdi,%rbx
+   35cf4:	48 83 ec 08          	sub    $0x8,%rsp
+   35cf8:	48 8b 97 88 00 00 00 	mov    0x88(%rdi),%rdx
+   35cff:	48 89 d0             	mov    %rdx,%rax
+   35d02:	48 2b 87 80 00 00 00 	sub    0x80(%rdi),%rax
+   35d09:	41 89 c4             	mov    %eax,%r12d
+   35d0c:	39 87 98 00 00 00    	cmp    %eax,0x98(%rdi)
+   35d12:	0f 86 b8 01 00 00    	jbe    35ed0 <nvEvoMakeRoom+0x1f0>
+   35d18:	45 31 ed             	xor    %r13d,%r13d
+   35d1b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
+   35d20:	48 8b 43 78          	mov    0x78(%rbx),%rax
+   35d24:	8b 68 04             	mov    0x4(%rax),%ebp
+   35d27:	8b 83 98 00 00 00    	mov    0x98(%rbx),%eax
+   35d2d:	41 39 ec             	cmp    %ebp,%r12d
+   35d30:	72 2e                	jb     35d60 <nvEvoMakeRoom+0x80>
+   35d32:	44 29 e0             	sub    %r12d,%eax
+   35d35:	c1 e8 02             	shr    $0x2,%eax
+   35d38:	89 83 a0 00 00 00    	mov    %eax,0xa0(%rbx)
+   35d3e:	44 39 f0             	cmp    %r14d,%eax
+   35d41:	0f 86 e9 00 00 00    	jbe    35e30 <nvEvoMakeRoom+0x150>
+   35d47:	48 83 c4 08          	add    $0x8,%rsp
+   35d4b:	5b                   	pop    %rbx
+   35d4c:	5d                   	pop    %rbp
+   35d4d:	41 5c                	pop    %r12
+   35d4f:	41 5d                	pop    %r13
+   35d51:	41 5e                	pop    %r14
+   35d53:	41 5f                	pop    %r15
+   35d55:	e9 00 00 00 00       	jmp    35d5a <nvEvoMakeRoom+0x7a>
+   35d5a:	66 0f 1f 44 00 00    	nopw   0x0(%rax,%rax,1)
+   35d60:	39 c5                	cmp    %eax,%ebp
+   35d62:	0f 47 e8             	cmova  %eax,%ebp
+   35d65:	41 8d 44 24 14       	lea    0x14(%r12),%eax
+   35d6a:	39 e8                	cmp    %ebp,%eax
+   35d6c:	0f 82 9e 00 00 00    	jb     35e10 <nvEvoMakeRoom+0x130>
+   35d72:	c7 83 a0 00 00 00 00 	movl   $0x0,0xa0(%rbx)
+   35d79:	00 00 00 
+   35d7c:	4c 8b bb a8 00 00 00 	mov    0xa8(%rbx),%r15
+   35d83:	e8 00 00 00 00       	call   35d88 <nvEvoMakeRoom+0xa8>
+   35d88:	41 8b 97 20 12 00 00 	mov    0x1220(%r15),%edx
+   35d8f:	85 d2                	test   %edx,%edx
+   35d91:	74 2d                	je     35dc0 <nvEvoMakeRoom+0xe0>
+   35d93:	83 fa 07             	cmp    $0x7,%edx
+   35d96:	74 28                	je     35dc0 <nvEvoMakeRoom+0xe0>
+   35d98:	ba 00 65 cd 1d       	mov    $0x1dcd6500,%edx
+   35d9d:	4d 85 ed             	test   %r13,%r13
+   35da0:	74 28                	je     35dca <nvEvoMakeRoom+0xea>
+   35da2:	4c 39 e8             	cmp    %r13,%rax
+   35da5:	72 29                	jb     35dd0 <nvEvoMakeRoom+0xf0>
+   35da7:	4c 29 e8             	sub    %r13,%rax
+   35daa:	48 39 d0             	cmp    %rdx,%rax
+   35dad:	77 21                	ja     35dd0 <nvEvoMakeRoom+0xf0>
+   35daf:	e8 00 00 00 00       	call   35db4 <nvEvoMakeRoom+0xd4>
+   35db4:	e9 67 ff ff ff       	jmp    35d20 <nvEvoMakeRoom+0x40>
+   35db9:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
+   35dc0:	ba 40 4b 4c 00       	mov    $0x4c4b40,%edx
+   35dc5:	4d 85 ed             	test   %r13,%r13
+   35dc8:	75 d8                	jne    35da2 <nvEvoMakeRoom+0xc2>
+   35dca:	49 89 c5             	mov    %rax,%r13
+   35dcd:	eb e0                	jmp    35daf <nvEvoMakeRoom+0xcf>
+   35dcf:	90                   	nop
+   35dd0:	8b 83 a0 00 00 00    	mov    0xa0(%rbx),%eax
+   35dd6:	48 83 ec 08          	sub    $0x8,%rsp
+   35dda:	8b 4b 30             	mov    0x30(%rbx),%ecx
+   35ddd:	45 89 f1             	mov    %r14d,%r9d
+   35de0:	41 54                	push   %r12
+   35de2:	44 8b 43 34          	mov    0x34(%rbx),%r8d
+   35de6:	48 c7 c2 00 00 00 00 	mov    $0x0,%rdx
+   35ded:	45 31 ed             	xor    %r13d,%r13d
+   35df0:	55                   	push   %rbp
+   35df1:	48 8b bb a8 00 00 00 	mov    0xa8(%rbx),%rdi
+   35df8:	be 01 00 00 00       	mov    $0x1,%esi
+   35dfd:	50                   	push   %rax
+   35dfe:	31 c0                	xor    %eax,%eax
+   35e00:	e8 00 00 00 00       	call   35e05 <nvEvoMakeRoom+0x125>
+   35e05:	48 83 c4 20          	add    $0x20,%rsp
+   35e09:	eb a4                	jmp    35daf <nvEvoMakeRoom+0xcf>
+   35e0b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
+   35e10:	89 e8                	mov    %ebp,%eax
+   35e12:	44 29 e0             	sub    %r12d,%eax
+   35e15:	c1 e8 02             	shr    $0x2,%eax
+   35e18:	83 e8 01             	sub    $0x1,%eax
+   35e1b:	89 83 a0 00 00 00    	mov    %eax,0xa0(%rbx)
+   35e21:	41 39 c6             	cmp    %eax,%r14d
+   35e24:	0f 83 52 ff ff ff    	jae    35d7c <nvEvoMakeRoom+0x9c>
+   35e2a:	e9 18 ff ff ff       	jmp    35d47 <nvEvoMakeRoom+0x67>
+   35e2f:	90                   	nop
+   35e30:	85 ed                	test   %ebp,%ebp
+   35e32:	75 4c                	jne    35e80 <nvEvoMakeRoom+0x1a0>
+   35e34:	8b 93 9c 00 00 00    	mov    0x9c(%rbx),%edx
+   35e3a:	44 39 e2             	cmp    %r12d,%edx
+   35e3d:	0f 84 39 ff ff ff    	je     35d7c <nvEvoMakeRoom+0x9c>
+   35e43:	48 8b 83 88 00 00 00 	mov    0x88(%rbx),%rax
+   35e4a:	48 2b 83 80 00 00 00 	sub    0x80(%rbx),%rax
+   35e51:	41 89 c4             	mov    %eax,%r12d
+   35e54:	39 c2                	cmp    %eax,%edx
+   35e56:	0f 84 20 ff ff ff    	je     35d7c <nvEvoMakeRoom+0x9c>
+   35e5c:	0f ae f8             	sfence
+   35e5f:	48 8b 53 78          	mov    0x78(%rbx),%rdx
+   35e63:	89 83 9c 00 00 00    	mov    %eax,0x9c(%rbx)
+   35e69:	89 02                	mov    %eax,(%rdx)
+   35e6b:	44 8b a3 9c 00 00 00 	mov    0x9c(%rbx),%r12d
+   35e72:	8b 83 a0 00 00 00    	mov    0xa0(%rbx),%eax
+   35e78:	eb a7                	jmp    35e21 <nvEvoMakeRoom+0x141>
+   35e7a:	66 0f 1f 44 00 00    	nopw   0x0(%rax,%rax,1)
+   35e80:	48 8b 83 88 00 00 00 	mov    0x88(%rbx),%rax
+   35e87:	c7 00 00 00 00 20    	movl   $0x20000000,(%rax)
+   35e8d:	48 8b 83 80 00 00 00 	mov    0x80(%rbx),%rax
+   35e94:	44 8b a3 9c 00 00 00 	mov    0x9c(%rbx),%r12d
+   35e9b:	48 89 83 88 00 00 00 	mov    %rax,0x88(%rbx)
+   35ea2:	45 85 e4             	test   %r12d,%r12d
+   35ea5:	74 cb                	je     35e72 <nvEvoMakeRoom+0x192>
+   35ea7:	0f ae f8             	sfence
+   35eaa:	48 8b 43 78          	mov    0x78(%rbx),%rax
+   35eae:	45 31 e4             	xor    %r12d,%r12d
+   35eb1:	c7 83 9c 00 00 00 00 	movl   $0x0,0x9c(%rbx)
+   35eb8:	00 00 00 
+   35ebb:	c7 00 00 00 00 00    	movl   $0x0,(%rax)
+   35ec1:	8b 83 a0 00 00 00    	mov    0xa0(%rbx),%eax
+   35ec7:	e9 55 ff ff ff       	jmp    35e21 <nvEvoMakeRoom+0x141>
+   35ecc:	0f 1f 40 00          	nopl   0x0(%rax)
+   35ed0:	c7 02 00 00 00 20    	movl   $0x20000000,(%rdx)
+   35ed6:	48 8b 87 80 00 00 00 	mov    0x80(%rdi),%rax
+   35edd:	44 8b a7 9c 00 00 00 	mov    0x9c(%rdi),%r12d
+   35ee4:	48 89 87 88 00 00 00 	mov    %rax,0x88(%rdi)
+   35eeb:	45 85 e4             	test   %r12d,%r12d
+   35eee:	0f 84 24 fe ff ff    	je     35d18 <nvEvoMakeRoom+0x38>
+   35ef4:	0f ae f8             	sfence
+   35ef7:	48 8b 47 78          	mov    0x78(%rdi),%rax
+   35efb:	45 31 e4             	xor    %r12d,%r12d
+   35efe:	c7 87 9c 00 00 00 00 	movl   $0x0,0x9c(%rdi)
+   35f05:	00 00 00 
+   35f08:	c7 00 00 00 00 00    	movl   $0x0,(%rax)
+   35f0e:	e9 05 fe ff ff       	jmp    35d18 <nvEvoMakeRoom+0x38>
+
+Disassembly of section .init.text:
+
+Disassembly of section .exit.text:

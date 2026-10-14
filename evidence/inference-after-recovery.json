@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "42"
+      }
+    }
+  ],
+  "created": 1791993571,
+  "model": "Swift-1.5-Qwen3.8-27B-GSQ-RCO-IQ3_S-mtp",
+  "system_fingerprint": "b11606-1b70350c9",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 3,
+    "prompt_tokens": 28,
+    "total_tokens": 31,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    }
+  },
+  "id": "chatcmpl-6W8tkV2fHP1GFrIffCPDIJJfj937tiPB",
+  "timings": {
+    "cache_n": 0,
+    "prompt_n": 28,
+    "prompt_ms": 204.3,
+    "prompt_per_token_ms": 7.296428571428572,
+    "prompt_per_second": 137.05335291238373,
+    "predicted_n": 3,
+    "predicted_ms": 59.059,
+    "predicted_per_token_ms": 29.5295,
+    "predicted_per_second": 33.86444064410166
+  }
+}

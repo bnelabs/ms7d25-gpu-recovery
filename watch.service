@@ -1,0 +1,16 @@
+[Unit]
+Description=MS-7D25 Xid79 GPU recovery using independent PERST GPIO
+After=systemd-journald.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /usr/local/lib/gpu-recovery/watch.py
+Restart=on-failure
+RestartSec=10
+TimeoutStopSec=5
+ProtectHome=read-only
+ProtectSystem=full
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

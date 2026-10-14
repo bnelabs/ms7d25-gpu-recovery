@@ -1,0 +1,39 @@
+File appears to be binary: found 216075 non-ASCII characters, disassembling
+Binary file appears to be a valid ACPI table, disassembling
+Input file dsdt.dat, Length 0x9FE8C (654988) bytes
+ACPI: DSDT 0x0000000000000000 09FE8C (v02 ALASKA A M I    01072009 INTL 20200717)
+Pass 1 parse of [DSDT]
+Pass 2 parse of [DSDT]
+Parsing Deferred Opcodes (Methods/Buffers/Packages/Regions)
+
+Parsing completed
+
+ iASL Warning: There were 237 external control methods found during
+ disassembly, but only 493 were resolved (4294967040 unresolved). Additional
+ ACPI tables may be required to properly disassemble the code. This
+ resulting disassembler output file may not compile because the
+ disassembler did not know how many arguments to assign to the
+ unresolved methods. Note: SSDTs can be dynamically loaded at
+ runtime and may or may not be available via the host OS.
+
+ To specify the tables needed to resolve external control method
+ references, the -e option can be used to specify the filenames.
+ Example iASL invocations:
+     iasl -e ssdt1.aml ssdt2.aml ssdt3.aml -d dsdt.aml
+     iasl -e dsdt.aml ssdt2.aml -d ssdt1.aml
+     iasl -e ssdt*.aml -d dsdt.aml
+
+ In addition, the -fe option can be used to specify a file containing
+ control method external declarations with the associated method
+ argument counts. Each line of the file must be of the form:
+     External (<method pathname>, MethodObj, <argument count>)
+ Invocation:
+     iasl -fe refs.txt -d dsdt.aml
+
+
+Intel ACPI Component Architecture
+ASL+ Optimizing Compiler/Disassembler version 20251212
+Copyright (c) 2000 - 2025 Intel Corporation
+
+Disassembly completed
+ASL Output:    dsdt.dsl - 4642691 bytes

@@ -1,0 +1,6 @@
+[<0>] update_curr+0x105/0x120
+[<0>] pick_task_fair+0x39/0x140
+[<0>] pick_next_task_fair+0x27/0x280
+[<0>] pick_next_task+0x67/0xc20
+[<0>] nvkms_yield+0xe/0x20 [nvidia_modeset]
+[<0>] nvEvoMakeRoom+0xd4/0x240 [nvidia_modeset]

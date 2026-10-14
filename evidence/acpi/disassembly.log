@@ -1,0 +1,317 @@
+File appears to be binary: found 216075 non-ASCII characters, disassembling
+Binary file appears to be a valid ACPI table, disassembling
+Input file dsdt.dat, Length 0x9FE8C (654988) bytes
+ACPI: DSDT 0x0000000000000000 09FE8C (v02 ALASKA A M I    01072009 INTL 20200717)
+Input file ssdt9.dat, Length 0x15E8 (5608) bytes
+ACPI: SSDT 0x0000000000000000 0015E8 (v02 INTEL  xh_adls3 00000000 INTL 20200717)
+Pass 1 parse of [SSDT]
+Pass 2 parse of [SSDT]
+Input file ssdt8.dat, Length 0x190A (6410) bytes
+ACPI: SSDT 0x0000000000000000 00190A (v02 ALASKA UsbCTabl 00001000 INTL 20200717)
+Pass 1 parse of [SSDT]
+Pass 2 parse of [SSDT]
+Input file ssdt7.dat, Length 0x93E7 (37863) bytes
+ACPI: SSDT 0x0000000000000000 0093E7 (v02 ALASKA TbtTypeC 00000000 INTL 20200717)
+Pass 1 parse of [SSDT]
+Pass 2 parse of [SSDT]
+Input file ssdt6.dat, Length 0x2A83 (10883) bytes
+ACPI: SSDT 0x0000000000000000 002A83 (v02 ALASKA PtidDevc 00001000 INTL 20200717)
+Pass 1 parse of [SSDT]
+Pass 2 parse of [SSDT]
+Input file ssdt5.dat, Length 0x1F1A (7962) bytes
+ACPI: SSDT 0x0000000000000000 001F1A (v02 ALASKA Ther_Rvp 00001000 INTL 20200717)
+Pass 1 parse of [SSDT]
+Pass 2 parse of [SSDT]
+Input file ssdt4.dat, Length 0x334F (13135) bytes
+ACPI: SSDT 0x0000000000000000 00334F (v02 INTEL  IgfxSsdt 00003000 INTL 20200717)
+Pass 1 parse of [SSDT]
+Pass 2 parse of [SSDT]
+Input file ssdt3.dat, Length 0x2BA7 (11175) bytes
+ACPI: SSDT 0x0000000000000000 002BA7 (v02 SaSsdt SaSsdt   00003000 INTL 20200717)
+Pass 1 parse of [SSDT]
+Pass 2 parse of [SSDT]
+Input file ssdt2.dat, Length 0x5D34 (23860) bytes
+ACPI: SSDT 0x0000000000000000 005D34 (v02 CpuRef CpuSsdt  00003000 INTL 20200717)
+Pass 1 parse of [SSDT]
+Pass 2 parse of [SSDT]
+Input file ssdt19.dat, Length 0xFBB (4027) bytes
+ACPI: SSDT 0x0000000000000000 000FBB (v02 PmRef  ApCst    00003000 INTL 20200717)
+Pass 1 parse of [SSDT]
+Pass 2 parse of [SSDT]
+Input file ssdt18.dat, Length 0x1349 (4937) bytes
+ACPI: SSDT 0x0000000000000000 001349 (v02 PmRef  ApPsd    00003000 INTL 20200717)
+Pass 1 parse of [SSDT]
+Pass 2 parse of [SSDT]
+Input file ssdt17.dat, Length 0x1038 (4152) bytes
+ACPI: SSDT 0x0000000000000000 001038 (v02 PmRef  ApHwp    00003000 INTL 20200717)
+Pass 1 parse of [SSDT]
+Pass 2 parse of [SSDT]
+Input file ssdt16.dat, Length 0x1BAF (7087) bytes
+ACPI: SSDT 0x0000000000000000 001BAF (v02 PmRef  ApIst    00003000 INTL 20200717)
+Pass 1 parse of [SSDT]
+Pass 2 parse of [SSDT]
+Input file ssdt15.dat, Length 0x4B5 (1205) bytes
+ACPI: SSDT 0x0000000000000000 0004B5 (v02 PmRef  Cpu0Hwp  00003000 INTL 20200717)
+Pass 1 parse of [SSDT]
+Pass 2 parse of [SSDT]
+Input file ssdt14.dat, Length 0x1AB (427) bytes
+ACPI: SSDT 0x0000000000000000 0001AB (v02 PmRef  Cpu0Psd  00003000 INTL 20200717)
+Pass 1 parse of [SSDT]
+Pass 2 parse of [SSDT]
+Input file ssdt13.dat, Length 0x647 (1607) bytes
+ACPI: SSDT 0x0000000000000000 000647 (v02 PmRef  Cpu0Ist  00003000 INTL 20200717)
+Pass 1 parse of [SSDT]
+Pass 2 parse of [SSDT]
+Input file ssdt12.dat, Length 0x394 (916) bytes
+ACPI: SSDT 0x0000000000000000 000394 (v02 PmRef  Cpu0Cst  00003001 INTL 20200717)
+Pass 1 parse of [SSDT]
+Pass 2 parse of [SSDT]
+Input file ssdt11.dat, Length 0x39DA (14810) bytes
+ACPI: SSDT 0x0000000000000000 0039DA (v02 SocCmn SocCmn   00003000 INTL 20200717)
+Pass 1 parse of [SSDT]
+Pass 2 parse of [SSDT]
+Input file ssdt10.dat, Length 0x39DA (14810) bytes
+ACPI: SSDT 0x0000000000000000 0039DA (v02 SocGpe SocGpe   00003000 INTL 20200717)
+Pass 1 parse of [SSDT]
+Pass 2 parse of [SSDT]
+Input file ssdt1.dat, Length 0x38C (908) bytes
+ACPI: SSDT 0x0000000000000000 00038C (v02 PmaxDv Pmax_Dev 00000001 INTL 20200717)
+Pass 1 parse of [SSDT]
+Pass 2 parse of [SSDT]
+Pass 1 parse of [DSDT]
+ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20251212/psobject-264)
+File appears to be binary: found 490 non-ASCII characters, disassembling
+Binary file appears to be a valid ACPI table, disassembling
+Input file ssdt1.dat, Length 0x38C (908) bytes
+ACPI: SSDT 0x0000000000000000 00038C (v02 PmaxDv Pmax_Dev 00000001 INTL 20200717)
+Input file ssdt9.dat, Length 0x15E8 (5608) bytes
+ACPI: SSDT 0x0000000000000000 0015E8 (v02 INTEL  xh_adls3 00000000 INTL 20200717)
+Pass 1 parse of [SSDT]
+ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20251212/psobject-264)
+File appears to be binary: found 2471 non-ASCII characters, disassembling
+Binary file appears to be a valid ACPI table, disassembling
+Input file ssdt10.dat, Length 0x39DA (14810) bytes
+ACPI: SSDT 0x0000000000000000 0039DA (v02 SocGpe SocGpe   00003000 INTL 20200717)
+Input file ssdt9.dat, Length 0x15E8 (5608) bytes
+ACPI: SSDT 0x0000000000000000 0015E8 (v02 INTEL  xh_adls3 00000000 INTL 20200717)
+Pass 1 parse of [SSDT]
+ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20251212/psobject-264)
+File appears to be binary: found 3114 non-ASCII characters, disassembling
+Binary file appears to be a valid ACPI table, disassembling
+Input file ssdt11.dat, Length 0x39DA (14810) bytes
+ACPI: SSDT 0x0000000000000000 0039DA (v02 SocCmn SocCmn   00003000 INTL 20200717)
+Input file ssdt9.dat, Length 0x15E8 (5608) bytes
+ACPI: SSDT 0x0000000000000000 0015E8 (v02 INTEL  xh_adls3 00000000 INTL 20200717)
+Pass 1 parse of [SSDT]
+ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20251212/psobject-264)
+File appears to be binary: found 387 non-ASCII characters, disassembling
+Binary file appears to be a valid ACPI table, disassembling
+Input file ssdt12.dat, Length 0x394 (916) bytes
+ACPI: SSDT 0x0000000000000000 000394 (v02 PmRef  Cpu0Cst  00003001 INTL 20200717)
+Input file ssdt9.dat, Length 0x15E8 (5608) bytes
+ACPI: SSDT 0x0000000000000000 0015E8 (v02 INTEL  xh_adls3 00000000 INTL 20200717)
+Pass 1 parse of [SSDT]
+ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20251212/psobject-264)
+File appears to be binary: found 1016 non-ASCII characters, disassembling
+Binary file appears to be a valid ACPI table, disassembling
+Input file ssdt13.dat, Length 0x647 (1607) bytes
+ACPI: SSDT 0x0000000000000000 000647 (v02 PmRef  Cpu0Ist  00003000 INTL 20200717)
+Input file ssdt9.dat, Length 0x15E8 (5608) bytes
+ACPI: SSDT 0x0000000000000000 0015E8 (v02 INTEL  xh_adls3 00000000 INTL 20200717)
+Pass 1 parse of [SSDT]
+ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20251212/psobject-264)
+File appears to be binary: found 172 non-ASCII characters, disassembling
+Binary file appears to be a valid ACPI table, disassembling
+Input file ssdt14.dat, Length 0x1AB (427) bytes
+ACPI: SSDT 0x0000000000000000 0001AB (v02 PmRef  Cpu0Psd  00003000 INTL 20200717)
+Input file ssdt9.dat, Length 0x15E8 (5608) bytes
+ACPI: SSDT 0x0000000000000000 0015E8 (v02 INTEL  xh_adls3 00000000 INTL 20200717)
+Pass 1 parse of [SSDT]
+ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20251212/psobject-264)
+File appears to be binary: found 719 non-ASCII characters, disassembling
+Binary file appears to be a valid ACPI table, disassembling
+Input file ssdt15.dat, Length 0x4B5 (1205) bytes
+ACPI: SSDT 0x0000000000000000 0004B5 (v02 PmRef  Cpu0Hwp  00003000 INTL 20200717)
+Input file ssdt9.dat, Length 0x15E8 (5608) bytes
+ACPI: SSDT 0x0000000000000000 0015E8 (v02 INTEL  xh_adls3 00000000 INTL 20200717)
+Pass 1 parse of [SSDT]
+ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20251212/psobject-264)
+File appears to be binary: found 1541 non-ASCII characters, disassembling
+Binary file appears to be a valid ACPI table, disassembling
+Input file ssdt16.dat, Length 0x1BAF (7087) bytes
+ACPI: SSDT 0x0000000000000000 001BAF (v02 PmRef  ApIst    00003000 INTL 20200717)
+Input file ssdt9.dat, Length 0x15E8 (5608) bytes
+ACPI: SSDT 0x0000000000000000 0015E8 (v02 INTEL  xh_adls3 00000000 INTL 20200717)
+Pass 1 parse of [SSDT]
+ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20251212/psobject-264)
+File appears to be binary: found 801 non-ASCII characters, disassembling
+Binary file appears to be a valid ACPI table, disassembling
+Input file ssdt17.dat, Length 0x1038 (4152) bytes
+ACPI: SSDT 0x0000000000000000 001038 (v02 PmRef  ApHwp    00003000 INTL 20200717)
+Input file ssdt9.dat, Length 0x15E8 (5608) bytes
+ACPI: SSDT 0x0000000000000000 0015E8 (v02 INTEL  xh_adls3 00000000 INTL 20200717)
+Pass 1 parse of [SSDT]
+ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20251212/psobject-264)
+File appears to be binary: found 1000 non-ASCII characters, disassembling
+Binary file appears to be a valid ACPI table, disassembling
+Input file ssdt18.dat, Length 0x1349 (4937) bytes
+ACPI: SSDT 0x0000000000000000 001349 (v02 PmRef  ApPsd    00003000 INTL 20200717)
+Input file ssdt9.dat, Length 0x15E8 (5608) bytes
+ACPI: SSDT 0x0000000000000000 0015E8 (v02 INTEL  xh_adls3 00000000 INTL 20200717)
+Pass 1 parse of [SSDT]
+ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20251212/psobject-264)
+File appears to be binary: found 777 non-ASCII characters, disassembling
+Binary file appears to be a valid ACPI table, disassembling
+Input file ssdt19.dat, Length 0xFBB (4027) bytes
+ACPI: SSDT 0x0000000000000000 000FBB (v02 PmRef  ApCst    00003000 INTL 20200717)
+Input file ssdt9.dat, Length 0x15E8 (5608) bytes
+ACPI: SSDT 0x0000000000000000 0015E8 (v02 INTEL  xh_adls3 00000000 INTL 20200717)
+Pass 1 parse of [SSDT]
+ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20251212/psobject-264)
+File appears to be binary: found 5058 non-ASCII characters, disassembling
+Binary file appears to be a valid ACPI table, disassembling
+Input file ssdt2.dat, Length 0x5D34 (23860) bytes
+ACPI: SSDT 0x0000000000000000 005D34 (v02 CpuRef CpuSsdt  00003000 INTL 20200717)
+Input file ssdt9.dat, Length 0x15E8 (5608) bytes
+ACPI: SSDT 0x0000000000000000 0015E8 (v02 INTEL  xh_adls3 00000000 INTL 20200717)
+Pass 1 parse of [SSDT]
+ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20251212/psobject-264)
+File appears to be binary: found 3558 non-ASCII characters, disassembling
+Binary file appears to be a valid ACPI table, disassembling
+Input file ssdt3.dat, Length 0x2BA7 (11175) bytes
+ACPI: SSDT 0x0000000000000000 002BA7 (v02 SaSsdt SaSsdt   00003000 INTL 20200717)
+Input file ssdt9.dat, Length 0x15E8 (5608) bytes
+ACPI: SSDT 0x0000000000000000 0015E8 (v02 INTEL  xh_adls3 00000000 INTL 20200717)
+Pass 1 parse of [SSDT]
+ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20251212/psobject-264)
+
+Intel ACPI Component Architecture
+ASL+ Optimizing Compiler/Disassembler version 20251212
+Copyright (c) 2000 - 2025 Intel Corporation
+
+External object resolution file        ssdt9.dat
+External object resolution file        ssdt8.dat
+External object resolution file        ssdt7.dat
+External object resolution file        ssdt6.dat
+External object resolution file        ssdt5.dat
+External object resolution file        ssdt4.dat
+External object resolution file        ssdt3.dat
+External object resolution file        ssdt2.dat
+External object resolution file       ssdt19.dat
+External object resolution file       ssdt18.dat
+External object resolution file       ssdt17.dat
+External object resolution file       ssdt16.dat
+External object resolution file       ssdt15.dat
+External object resolution file       ssdt14.dat
+External object resolution file       ssdt13.dat
+External object resolution file       ssdt12.dat
+External object resolution file       ssdt11.dat
+External object resolution file       ssdt10.dat
+External object resolution file        ssdt1.dat
+Firmware Error (ACPI): Failure creating named object [\_SB.PC00.XHCI.RHUB.HS14.SADX], AE_ALREADY_EXISTS (20251212/dswload-387)
+Could not parse ACPI tables, AE_ALREADY_EXISTS
+External object resolution file        ssdt9.dat
+Firmware Error (ACPI): Failure creating named object [\_SB.PC00.XHCI.PDLV], AE_ALREADY_EXISTS (20251212/dswload-387)
+Could not parse external ACPI tables, AE_ALREADY_EXISTS
+External object resolution file        ssdt9.dat
+Firmware Error (ACPI): Failure creating named object [\_SB.PC00.XHCI.PDLV], AE_ALREADY_EXISTS (20251212/dswload-387)
+Could not parse external ACPI tables, AE_ALREADY_EXISTS
+External object resolution file        ssdt9.dat
+Firmware Error (ACPI): Failure creating named object [\_SB.PC00.XHCI.PDLV], AE_ALREADY_EXISTS (20251212/dswload-387)
+Could not parse external ACPI tables, AE_ALREADY_EXISTS
+External object resolution file        ssdt9.dat
+Firmware Error (ACPI): Failure creating named object [\_SB.PC00.XHCI.PDLV], AE_ALREADY_EXISTS (20251212/dswload-387)
+Could not parse external ACPI tables, AE_ALREADY_EXISTS
+External object resolution file        ssdt9.dat
+Firmware Error (ACPI): Failure creating named object [\_SB.PC00.XHCI.PDLV], AE_ALREADY_EXISTS (20251212/dswload-387)
+Could not parse external ACPI tables, AE_ALREADY_EXISTS
+External object resolution file        ssdt9.dat
+Firmware Error (ACPI): Failure creating named object [\_SB.PC00.XHCI.PDLV], AE_ALREADY_EXISTS (20251212/dswload-387)
+Could not parse external ACPI tables, AE_ALREADY_EXISTS
+External object resolution file        ssdt9.dat
+Firmware Error (ACPI): Failure creating named object [\_SB.PC00.XHCI.PDLV], AE_ALREADY_EXISTS (20251212/dswload-387)
+Could not parse external ACPI tables, AE_ALREADY_EXISTS
+External object resolution file        ssdt9.dat
+Firmware Error (ACPI): Failure creating named object [\_SB.PC00.XHCI.PDLV], AE_ALREADY_EXISTS (20251212/dswload-387)
+Could not parse external ACPI tables, AE_ALREADY_EXISTS
+External object resolution file        ssdt9.dat
+Firmware Error (ACPI): Failure creating named object [\_SB.PC00.XHCI.PDLV], AE_ALREADY_EXISTS (20251212/dswload-387)
+Could not parse external ACPI tables, AE_ALREADY_EXISTS
+External object resolution file        ssdt9.dat
+Firmware Error (ACPI): Failure creating named object [\_SB.PC00.XHCI.PDLV], AE_ALREADY_EXISTS (20251212/dswload-387)
+Could not parse external ACPI tables, AE_ALREADY_EXISTS
+External object resolution file        ssdt9.dat
+Firmware Error (ACPI): Failure creating named object [\_SB.PC00.XHCI.PDLV], AE_ALREADY_EXISTS (20251212/dswload-387)
+Could not parse external ACPI tables, AE_ALREADY_EXISTS
+External object resolution file        ssdt9.dat
+Firmware Error (ACPI): Failure creating named object [\_SB.PC00.XHCI.PDLV], AE_ALREADY_EXISTS (20251212/dswload-387)
+Could not parse external ACPI tables, AE_ALREADY_EXISTS
+External object resolution file        ssdt9.dat
+Firmware Error (ACPI): Failure creating named object [\_SB.PC00.XHCI.PDLV], AE_ALREADY_EXISTS (20251212/dswload-387)
+Could not parse external AFile appears to be binary: found 4410 non-ASCII characters, disassembling
+Binary file appears to be a valid ACPI table, disassembling
+Input file ssdt4.dat, Length 0x334F (13135) bytes
+ACPI: SSDT 0x0000000000000000 00334F (v02 INTEL  IgfxSsdt 00003000 INTL 20200717)
+Input file ssdt9.dat, Length 0x15E8 (5608) bytes
+ACPI: SSDT 0x0000000000000000 0015E8 (v02 INTEL  xh_adls3 00000000 INTL 20200717)
+Pass 1 parse of [SSDT]
+ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20251212/psobject-264)
+File appears to be binary: found 847 non-ASCII characters, disassembling
+Binary file appears to be a valid ACPI table, disassembling
+Input file ssdt5.dat, Length 0x1F1A (7962) bytes
+ACPI: SSDT 0x0000000000000000 001F1A (v02 ALASKA Ther_Rvp 00001000 INTL 20200717)
+Input file ssdt9.dat, Length 0x15E8 (5608) bytes
+ACPI: SSDT 0x0000000000000000 0015E8 (v02 INTEL  xh_adls3 00000000 INTL 20200717)
+Pass 1 parse of [SSDT]
+ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20251212/psobject-264)
+File appears to be binary: found 1573 non-ASCII characters, disassembling
+Binary file appears to be a valid ACPI table, disassembling
+Input file ssdt6.dat, Length 0x2A83 (10883) bytes
+ACPI: SSDT 0x0000000000000000 002A83 (v02 ALASKA PtidDevc 00001000 INTL 20200717)
+Input file ssdt9.dat, Length 0x15E8 (5608) bytes
+ACPI: SSDT 0x0000000000000000 0015E8 (v02 INTEL  xh_adls3 00000000 INTL 20200717)
+Pass 1 parse of [SSDT]
+ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20251212/psobject-264)
+File appears to be binary: found 10374 non-ASCII characters, disassembling
+Binary file appears to be a valid ACPI table, disassembling
+Input file ssdt7.dat, Length 0x93E7 (37863) bytes
+ACPI: SSDT 0x0000000000000000 0093E7 (v02 ALASKA TbtTypeC 00000000 INTL 20200717)
+Input file ssdt9.dat, Length 0x15E8 (5608) bytes
+ACPI: SSDT 0x0000000000000000 0015E8 (v02 INTEL  xh_adls3 00000000 INTL 20200717)
+Pass 1 parse of [SSDT]
+ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20251212/psobject-264)
+File appears to be binary: found 1222 non-ASCII characters, disassembling
+Binary file appears to be a valid ACPI table, disassembling
+Input file ssdt8.dat, Length 0x190A (6410) bytes
+ACPI: SSDT 0x0000000000000000 00190A (v02 ALASKA UsbCTabl 00001000 INTL 20200717)
+Input file ssdt9.dat, Length 0x15E8 (5608) bytes
+ACPI: SSDT 0x0000000000000000 0015E8 (v02 INTEL  xh_adls3 00000000 INTL 20200717)
+Pass 1 parse of [SSDT]
+ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20251212/psobject-264)
+File appears to be binary: found 1680 non-ASCII characters, disassembling
+Binary file appears to be a valid ACPI table, disassembling
+Input file ssdt9.dat, Length 0x15E8 (5608) bytes
+ACPI: SSDT 0x0000000000000000 0015E8 (v02 INTEL  xh_adls3 00000000 INTL 20200717)
+Input file ssdt8.dat, Length 0x190A (6410) bytes
+ACPI: SSDT 0x0000000000000000 00190A (v02 ALASKA UsbCTabl 00001000 INTL 20200717)
+Pass 1 parse of [SSDT]
+ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20251212/psobject-264)
+CPI tables, AE_ALREADY_EXISTS
+External object resolution file        ssdt9.dat
+Firmware Error (ACPI): Failure creating named object [\_SB.PC00.XHCI.PDLV], AE_ALREADY_EXISTS (20251212/dswload-387)
+Could not parse external ACPI tables, AE_ALREADY_EXISTS
+External object resolution file        ssdt9.dat
+Firmware Error (ACPI): Failure creating named object [\_SB.PC00.XHCI.PDLV], AE_ALREADY_EXISTS (20251212/dswload-387)
+Could not parse external ACPI tables, AE_ALREADY_EXISTS
+External object resolution file        ssdt9.dat
+Firmware Error (ACPI): Failure creating named object [\_SB.PC00.XHCI.PDLV], AE_ALREADY_EXISTS (20251212/dswload-387)
+Could not parse external ACPI tables, AE_ALREADY_EXISTS
+External object resolution file        ssdt9.dat
+Firmware Error (ACPI): Failure creating named object [\_SB.PC00.XHCI.PDLV], AE_ALREADY_EXISTS (20251212/dswload-387)
+Could not parse external ACPI tables, AE_ALREADY_EXISTS
+External object resolution file        ssdt9.dat
+Firmware Error (ACPI): Failure creating named object [\_SB.PC00.XHCI.PDLV], AE_ALREADY_EXISTS (20251212/dswload-387)
+Could not parse external ACPI tables, AE_ALREADY_EXISTS
+External object resolution file        ssdt8.dat
+Firmware Error (ACPI): Failure creating named object [\_SB.UBTC], AE_ALREADY_EXISTS (20251212/dswload-387)
+Could not parse external ACPI tables, AE_ALREADY_EXISTS

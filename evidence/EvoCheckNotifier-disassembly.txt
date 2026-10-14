@@ -1,0 +1,114 @@
+
+/home/komedi/gpu-recovery-research/nvidia-modeset-installed.ko:     file format elf64-x86-64
+
+
+Disassembly of section .text:
+
+0000000000035ab0 <EvoCheckNotifier>:
+   35ab0:	41 57                	push   %r15
+   35ab2:	48 89 f8             	mov    %rdi,%rax
+   35ab5:	f7 d1                	not    %ecx
+   35ab7:	41 56                	push   %r14
+   35ab9:	83 e1 1f             	and    $0x1f,%ecx
+   35abc:	41 55                	push   %r13
+   35abe:	41 54                	push   %r12
+   35ac0:	41 bc ff ff ff ff    	mov    $0xffffffff,%r12d
+   35ac6:	55                   	push   %rbp
+   35ac7:	89 f5                	mov    %esi,%ebp
+   35ac9:	53                   	push   %rbx
+   35aca:	48 83 ec 28          	sub    $0x28,%rsp
+   35ace:	4c 8b 78 08          	mov    0x8(%rax),%r15
+   35ad2:	48 89 7c 24 10       	mov    %rdi,0x10(%rsp)
+   35ad7:	8b bf 70 28 00 00    	mov    0x2870(%rdi),%edi
+   35add:	4d 8b b7 18 0c 00 00 	mov    0xc18(%r15),%r14
+   35ae4:	44 89 4c 24 1c       	mov    %r9d,0x1c(%rsp)
+   35ae9:	89 7c 24 18          	mov    %edi,0x18(%rsp)
+   35aed:	49 8b 46 28          	mov    0x28(%r14),%rax
+   35af1:	48 8d 2c a8          	lea    (%rax,%rbp,4),%rbp
+   35af5:	89 d0                	mov    %edx,%eax
+   35af7:	83 e0 1f             	and    $0x1f,%eax
+   35afa:	44 8b 6d 00          	mov    0x0(%rbp),%r13d
+   35afe:	01 c1                	add    %eax,%ecx
+   35b00:	41 d3 ec             	shr    %cl,%r12d
+   35b03:	89 c1                	mov    %eax,%ecx
+   35b05:	44 89 e8             	mov    %r13d,%eax
+   35b08:	41 d3 e4             	shl    %cl,%r12d
+   35b0b:	89 d1                	mov    %edx,%ecx
+   35b0d:	41 d3 e0             	shl    %cl,%r8d
+   35b10:	44 21 e0             	and    %r12d,%eax
+   35b13:	44 89 44 24 0c       	mov    %r8d,0xc(%rsp)
+   35b18:	44 39 c0             	cmp    %r8d,%eax
+   35b1b:	0f 84 7f 00 00 00    	je     35ba0 <EvoCheckNotifier+0xf0>
+   35b21:	45 84 c9             	test   %r9b,%r9b
+   35b24:	0f 84 d1 00 00 00    	je     35bfb <EvoCheckNotifier+0x14b>
+   35b2a:	31 db                	xor    %ebx,%ebx
+   35b2c:	eb 36                	jmp    35b64 <EvoCheckNotifier+0xb4>
+   35b2e:	66 90                	xchg   %ax,%ax
+   35b30:	48 39 c3             	cmp    %rax,%rbx
+   35b33:	77 08                	ja     35b3d <EvoCheckNotifier+0x8d>
+   35b35:	48 29 d8             	sub    %rbx,%rax
+   35b38:	48 39 d0             	cmp    %rdx,%rax
+   35b3b:	76 12                	jbe    35b4f <EvoCheckNotifier+0x9f>
+   35b3d:	49 8b 46 78          	mov    0x78(%r14),%rax
+   35b41:	41 8b 96 9c 00 00 00 	mov    0x9c(%r14),%edx
+   35b48:	8b 40 04             	mov    0x4(%rax),%eax
+   35b4b:	39 c2                	cmp    %eax,%edx
+   35b4d:	74 71                	je     35bc0 <EvoCheckNotifier+0x110>
+   35b4f:	e8 00 00 00 00       	call   35b54 <EvoCheckNotifier+0xa4>
+   35b54:	44 8b 6d 00          	mov    0x0(%rbp),%r13d
+   35b58:	44 89 e8             	mov    %r13d,%eax
+   35b5b:	44 21 e0             	and    %r12d,%eax
+   35b5e:	3b 44 24 0c          	cmp    0xc(%rsp),%eax
+   35b62:	74 3c                	je     35ba0 <EvoCheckNotifier+0xf0>
+   35b64:	e8 00 00 00 00       	call   35b69 <EvoCheckNotifier+0xb9>
+   35b69:	41 8b 97 20 12 00 00 	mov    0x1220(%r15),%edx
+   35b70:	85 d2                	test   %edx,%edx
+   35b72:	74 1c                	je     35b90 <EvoCheckNotifier+0xe0>
+   35b74:	83 fa 07             	cmp    $0x7,%edx
+   35b77:	74 17                	je     35b90 <EvoCheckNotifier+0xe0>
+   35b79:	ba 00 a3 e1 11       	mov    $0x11e1a300,%edx
+   35b7e:	48 85 db             	test   %rbx,%rbx
+   35b81:	75 ad                	jne    35b30 <EvoCheckNotifier+0x80>
+   35b83:	48 89 c3             	mov    %rax,%rbx
+   35b86:	eb c7                	jmp    35b4f <EvoCheckNotifier+0x9f>
+   35b88:	0f 1f 84 00 00 00 00 	nopl   0x0(%rax,%rax,1)
+   35b8f:	00 
+   35b90:	ba c0 c6 2d 00       	mov    $0x2dc6c0,%edx
+   35b95:	eb e7                	jmp    35b7e <EvoCheckNotifier+0xce>
+   35b97:	66 0f 1f 84 00 00 00 	nopw   0x0(%rax,%rax,1)
+   35b9e:	00 00 
+   35ba0:	b8 01 00 00 00       	mov    $0x1,%eax
+   35ba5:	48 83 c4 28          	add    $0x28,%rsp
+   35ba9:	5b                   	pop    %rbx
+   35baa:	5d                   	pop    %rbp
+   35bab:	41 5c                	pop    %r12
+   35bad:	41 5d                	pop    %r13
+   35baf:	41 5e                	pop    %r14
+   35bb1:	41 5f                	pop    %r15
+   35bb3:	e9 00 00 00 00       	jmp    35bb8 <EvoCheckNotifier+0x108>
+   35bb8:	0f 1f 84 00 00 00 00 	nopl   0x0(%rax,%rax,1)
+   35bbf:	00 
+   35bc0:	8b 4c 24 18          	mov    0x18(%rsp),%ecx
+   35bc4:	48 8b 7c 24 10       	mov    0x10(%rsp),%rdi
+   35bc9:	45 89 e8             	mov    %r13d,%r8d
+   35bcc:	31 c0                	xor    %eax,%eax
+   35bce:	48 c7 c2 00 00 00 00 	mov    $0x0,%rdx
+   35bd5:	31 f6                	xor    %esi,%esi
+   35bd7:	e8 00 00 00 00       	call   35bdc <EvoCheckNotifier+0x12c>
+   35bdc:	8b 44 24 0c          	mov    0xc(%rsp),%eax
+   35be0:	89 45 00             	mov    %eax,0x0(%rbp)
+   35be3:	0f b6 44 24 1c       	movzbl 0x1c(%rsp),%eax
+   35be8:	48 83 c4 28          	add    $0x28,%rsp
+   35bec:	5b                   	pop    %rbx
+   35bed:	5d                   	pop    %rbp
+   35bee:	41 5c                	pop    %r12
+   35bf0:	41 5d                	pop    %r13
+   35bf2:	41 5e                	pop    %r14
+   35bf4:	41 5f                	pop    %r15
+   35bf6:	e9 00 00 00 00       	jmp    35bfb <EvoCheckNotifier+0x14b>
+   35bfb:	31 c0                	xor    %eax,%eax
+   35bfd:	eb a6                	jmp    35ba5 <EvoCheckNotifier+0xf5>
+
+Disassembly of section .init.text:
+
+Disassembly of section .exit.text:

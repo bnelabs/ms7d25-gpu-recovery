@@ -1,0 +1,10 @@
+__pycache__/
+build/
+evo-bail/*.o
+evo-bail/*.ko
+evo-bail/*.mod
+evo-bail/*.mod.c
+evo-bail/.*.cmd
+evo-bail/Module.symvers
+evo-bail/modules.order
+evo-bail/.tmp_versions/

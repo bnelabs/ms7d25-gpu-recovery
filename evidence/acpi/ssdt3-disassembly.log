@@ -1,0 +1,16 @@
+File appears to be binary: found 3558 non-ASCII characters, disassembling
+Binary file appears to be a valid ACPI table, disassembling
+Input file ssdt3.dat, Length 0x2BA7 (11175) bytes
+ACPI: SSDT 0x0000000000000000 002BA7 (v02 SaSsdt SaSsdt   00003000 INTL 20200717)
+Pass 1 parse of [SSDT]
+Pass 2 parse of [SSDT]
+Parsing Deferred Opcodes (Methods/Buffers/Packages/Regions)
+
+Parsing completed
+
+Intel ACPI Component Architecture
+ASL+ Optimizing Compiler/Disassembler version 20251212
+Copyright (c) 2000 - 2025 Intel Corporation
+
+Disassembly completed
+ASL Output:    ssdt3.dsl - 75561 bytes

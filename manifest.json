@@ -1,0 +1,5 @@
+{
+  "kernel": "7.0.0-38-generic",
+  "driver": "615.71.09",
+  "nvidia_modeset_sha256": "df263efe011e411671893708e379fd09947846543fa373fac179f8931b0f9447"
+}
