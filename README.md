@@ -67,7 +67,7 @@ sudo systemctl enable --now gpu-xid79-recovery.service
 sudo systemctl status gpu-xid79-recovery.service
 ```
 
-The watcher follows new kernel events and checks the expected GPU UUID through NVML every 15 seconds, including at startup. It holds inference services before recovery or suppression. It allows at most three adapter invocations per hour; each invocation permits at most one clean initialization retry. Failed recovery suppresses further automatic attempts until the watcher is restarted. Timeout/teardown failures do not trigger a retry. It never invokes reboot, shutdown, suspend, or hibernate.
+The watcher follows new kernel events and checks the expected GPU UUID through NVML every 15 seconds, including at startup. It holds inference services before recovery or suppression. It allows at most three adapter invocations per hour; each invocation permits at most one clean initialization retry. Completed-PERST link-readiness failures return status 75 and schedule bounded delayed retries; other failed recovery suppresses further automatic attempts until the watcher is restarted. Timeout/teardown failures do not trigger a retry. It never invokes reboot, shutdown, suspend, or hibernate.
 
 ```bash
 sudo journalctl -u gpu-xid79-recovery.service -f
@@ -129,9 +129,19 @@ The server launcher checks the expected GPU UUID and runs the CUDA correctness p
 
 Validation on 2026-10-15:
 
-- Ten unit tests cover bounded retries, timeout refusal, desired-service persistence, health failures, event suppression and correct multi-module loading.
+- Seventeen unit tests cover bounded retries, timeout refusal, desired-service persistence, health failures, event suppression and correct multi-module loading.
 - With CUDA devices hidden in a separate test process, llama-server exits with `invalid device: CUDA0`; it does not start a CPU worker.
 - The updated installed adapter completed a controlled recovery on the physical GPU, passed CUDA transfer correctness, restored both services and preserved boot identity.
 - The router and Swift worker both include `--device CUDA0`; Swift replied `42` to `19 + 23`.
 
 The failure/retry branches have controlled unit coverage. A new spontaneous Xid79 has not yet exercised the updated watcher end to end.
+
+## Delayed retry after a link-readiness failure
+
+The 15:36 Xid79 recurrence on 2026-10-15 exposed a gap in the previous policy: the first PERST completed, but the GPU did not answer within its three-second wait. The watcher treated that stage as terminal. A manual cycle five minutes later succeeded. Keeping inference stopped prevented CPU fallback, but automatic recovery was incomplete.
+
+The adapter now waits up to 15 seconds for PCI vendor-ID access after a completed pulse. If that bounded poll fails, it returns exit status 75. The watcher schedules retries after 60 seconds, then 240 seconds, subject to the remaining three-invocations-per-hour budget. It does not need another Xid event. Pending cooldown and attempt history persist across watcher restarts in the same boot. If NVML visibility returns while a retry is pending, the full scheduled recovery still runs so that CUDA verification and service restoration are completed.
+
+GPIO operation failures, compatibility mismatches, blocked commands and teardown failures do not receive status 75 and are not retried by this path. Fresh initialization retains its existing single clean retry inside the adapter. Inference stays held until verification passes. The delayed retry timing is a policy based on the observed delayed manual success, not evidence that every lost link will recover at those intervals.
+
+Seventeen unit tests cover the timing, retry budget, persistence, success after cooldown and terminal-error classification. The new deferred path has not yet been exercised by a spontaneous hardware fault. Installation and read-only compatibility checks passed without resetting the healthy GPU.

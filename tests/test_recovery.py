@@ -55,3 +55,46 @@ class WatchTests(unittest.TestCase):
  def test_old_event_after_success_does_not_reset_healthy_gpu(self):
   with patch.object(w,'healthy',return_value=True),patch.object(w.subprocess,'run') as run:
    controller=w.Controller();controller.last_recovery_end=100;controller.check(True,90);run.assert_not_called()
+
+class DeferredRetryTests(unittest.TestCase):
+ def test_link_not_ready_retries_after_cooldown_without_new_xid(self):
+  clock=[100]
+  with patch.object(w,'healthy',return_value=False),patch.object(w.time,'monotonic',side_effect=lambda:clock[0]),patch.object(w.subprocess,'run',return_value=Mock(returncode=0)) as run:
+   # hold -> recover(tempfail); hold while waiting; hold -> recover(success)
+   run.side_effect=[Mock(returncode=n) for n in (0,75,0,0,0)]
+   c=w.Controller();c.check(True);self.assertTrue(c.pending_retry);self.assertFalse(c.failed)
+   self.assertEqual(c.next_attempt,160)
+   clock[0]=150;c.check();self.assertEqual(len(c.attempts),1)
+   clock[0]=160;c.check();self.assertEqual(len(c.attempts),2)
+   self.assertFalse(c.pending_retry);self.assertFalse(c.failed)
+ def test_three_link_failures_exhaust_budget(self):
+  clock=[100]
+  with patch.object(w,'healthy',return_value=False),patch.object(w.time,'monotonic',side_effect=lambda:clock[0]),patch.object(w.subprocess,'run',side_effect=[Mock(returncode=n) for n in (0,75,0,75,0,75,0)]) as run:
+   c=w.Controller();c.check();clock[0]=160;c.check();self.assertEqual(c.next_attempt,400)
+   clock[0]=400;c.check();clock[0]=1000;c.check()
+   self.assertTrue(c.failed);self.assertFalse(c.pending_retry)
+   self.assertEqual(sum(call.args[0]==[w.RECOVERY] for call in run.call_args_list),3)
+ def test_pending_retry_survives_same_boot_watcher_restart(self):
+  with tempfile.TemporaryDirectory() as directory,patch.object(w,'healthy',return_value=False),patch.object(w.time,'monotonic',return_value=100),patch.object(w.subprocess,'run',side_effect=[Mock(returncode=0),Mock(returncode=75)]):
+   path=pathlib.Path(directory)/'watch.json';c=w.Controller(path);c.check()
+   restarted=w.Controller(path);self.assertTrue(restarted.pending_retry)
+   self.assertEqual(restarted.next_attempt,160);self.assertEqual(list(restarted.attempts),[100])
+ def test_pending_retry_does_not_leave_held_services_off_if_nvml_returns(self):
+  clock=[100]
+  with patch.object(w,'healthy',side_effect=[False,True]),patch.object(w.time,'monotonic',side_effect=lambda:clock[0]),patch.object(w.subprocess,'run',side_effect=[Mock(returncode=n) for n in (0,75,0,0)]) as run:
+   c=w.Controller();c.check();clock[0]=160;c.check()
+   self.assertFalse(c.pending_retry);self.assertFalse(c.failed)
+   self.assertEqual(sum(call.args[0]==[w.RECOVERY] for call in run.call_args_list),2)
+
+class LinkReadinessTests(unittest.TestCase):
+ def test_only_completed_perst_readiness_failure_is_retryable(self):
+  self.assertEqual(r.error_exit_status(r.LinkNotReady('not ready')),75)
+  for error in (r.CommandTimeout('blocked'),RuntimeError('GPIO mismatch'),r.InitializationFailed('still failed')):
+   self.assertEqual(r.error_exit_status(error),1)
+ def test_pulse_wait_exhaustion_has_specific_status(self):
+  with patch.object(r,'log'),patch.object(r,'run',return_value=(0,'')),patch.object(r,'reg',return_value='ffff'),patch.object(r.time,'monotonic',side_effect=[100,100,116]),patch.object(r.time,'sleep'):
+   with self.assertRaises(r.LinkNotReady):r.pulse()
+ def test_failed_gpio_operation_never_classified_as_link_readiness(self):
+  with patch.object(r,'log'),patch.object(r,'run',side_effect=RuntimeError('GPIO mismatch')):
+   with self.assertRaises(RuntimeError) as error:r.pulse()
+   self.assertEqual(r.error_exit_status(error.exception),1)

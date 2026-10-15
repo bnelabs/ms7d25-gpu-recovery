@@ -15,6 +15,7 @@ STATE = pathlib.Path('/var/lib/gpu-recovery/services.json')
 
 class CommandTimeout(RuntimeError): pass
 class InitializationFailed(RuntimeError): pass
+class LinkNotReady(RuntimeError): pass
 
 def log(s):
     line = time.strftime('%Y-%m-%d %H:%M:%S ') + s
@@ -47,10 +48,11 @@ def modules():
 def pulse():
     log('Pulsing the GPU-only GPP_E2 PERST gate')
     run(['/usr/bin/python3',str(LIB/'pulse-perst.py')], 8)
-    for _ in range(30):
+    deadline=time.monotonic()+15
+    while time.monotonic()<deadline:
         if reg(GPU,'VENDOR_ID') == '10de': return
         time.sleep(.1)
-    raise RuntimeError('GPU did not become reachable after PERST')
+    raise LinkNotReady('GPU did not become reachable within 15 seconds after completed PERST')
 
 def restore_pci(resources, resize):
     for dev, rows in resources.items():
@@ -213,6 +215,10 @@ def main(check_only=False,hold_only=False):
     finally:
         if not success: log('Recovery failed; inference services remain stopped. No reboot requested.')
 
+def error_exit_status(error):
+    return 75 if isinstance(error,LinkNotReady) else 1
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--check',action='store_true',help='Check compatibility without resetting hardware')
@@ -220,4 +226,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
     try: main(args.check,args.hold_services)
     except Exception as e:
-        log(str(e));sys.exit(1)
+        log(str(e));sys.exit(error_exit_status(e))
