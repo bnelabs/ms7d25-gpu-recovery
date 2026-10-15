@@ -11,6 +11,10 @@ PCI = pathlib.Path('/sys/bus/pci/devices')
 ENV = dict(os.environ, XDG_RUNTIME_DIR='/run/user/1000',
            DBUS_SESSION_BUS_ADDRESS='unix:path=/run/user/1000/bus')
 UNITS = ('deepseek-harness.service', 'llama-server.service')
+STATE = pathlib.Path('/var/lib/gpu-recovery/services.json')
+
+class CommandTimeout(RuntimeError): pass
+class InitializationFailed(RuntimeError): pass
 
 def log(s):
     line = time.strftime('%Y-%m-%d %H:%M:%S ') + s
@@ -24,7 +28,7 @@ def run(args, timeout=20, check=True):
         out, _ = p.communicate(timeout=timeout)
     except subprocess.TimeoutExpired:
         os.killpg(p.pid, 9)
-        raise RuntimeError(f'Timeout in {args[0]}; do not repeat a blocked kernel call')
+        raise CommandTimeout(f'Timeout in {args[0]}; do not repeat a blocked kernel call')
     if check and p.returncode: raise RuntimeError(f'{args}: {out.strip()}')
     return p.returncode, out.strip()
 
@@ -32,7 +36,7 @@ def userctl(*args):
     return run(['/usr/sbin/runuser','-u','komedi','--','/usr/bin/env',
                 'XDG_RUNTIME_DIR=/run/user/1000',
                 'DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus',
-                '/usr/bin/systemctl','--user',*args], 30, False)
+                '/usr/bin/systemctl','--user',*args], 90 if args and args[0]=='stop' else 30, False)
 
 def reg(device, field):
     return run(['/usr/bin/setpci','-s',device,field])[1]
@@ -110,10 +114,67 @@ def unload():
             run(['/usr/sbin/rmmod','evo_bail'])
         output.close()
 
-def main(check_only=False):
+def hold_services():
+    """Remember desired services across failed recovery and keep them stopped."""
+    STATE.parent.mkdir(mode=0o700,parents=True,exist_ok=True)
+    saved=json.loads(STATE.read_text()) if STATE.exists() else {'units':[], 'persist':False}
+    units=set(saved['units']) | {u for u in UNITS if userctl('is-active','--quiet',u)[0]==0}
+    if not units<=set(UNITS):raise RuntimeError('Unexpected saved service')
+    persist=saved['persist'] or run(['/usr/bin/systemctl','is-active','--quiet','nvidia-persistenced.service'],check=False)[0]==0
+    temporary=STATE.with_suffix('.tmp')
+    temporary.write_text(json.dumps({'units':sorted(units),'persist':persist}))
+    os.chmod(temporary,0o600);temporary.replace(STATE)
+    # Stop both units even when one is currently activating or restarting.
+    rc,out=userctl('stop',*UNITS)
+    if rc:raise RuntimeError('Could not stop GPU services: '+out)
+    run(['/usr/bin/systemctl','stop','nvidia-persistenced.service'])
+    return saved
+
+
+def resume_services():
+    if not STATE.exists():return
+    saved=json.loads(STATE.read_text())
+    if not set(saved['units'])<=set(UNITS):raise RuntimeError('Unexpected saved service')
+    if saved['persist']:run(['/usr/bin/systemctl','start','nvidia-persistenced.service'])
+    if saved['units']:
+        ordered=[u for u in reversed(UNITS) if u in saved['units']]
+        rc,out=userctl('start',*ordered)
+        if rc:raise RuntimeError('GPU recovered but service startup failed: '+out)
+    STATE.unlink()
+
+
+def initialize_once(resources):
+    lost=reg(GPU,'VENDOR_ID')!='10de'
+    if lost:
+        pulse();restore_pci(resources,False)
+    unload()
+    pulse();restore_pci(resources,True)
+    if any(n.startswith('nvidia') for n in modules()):
+        raise RuntimeError('Unexpected driver autoload before PCI restoration completed')
+    rc,out=run(['/usr/sbin/modprobe','--all','nvidia','nvidia_uvm'],timeout=30,check=False)
+    if rc:raise InitializationFailed('Fresh module initialization failed: '+out)
+    rc,out=run([str(LIB/'cuda-probe')],timeout=30,check=False)
+    log(out)
+    if rc or 'Transfer correctness check: passed' not in out:
+        raise InitializationFailed('Fresh CUDA verification failed: '+out)
+
+
+def initialize_with_retry(resources):
+    for attempt in range(2):
+        try:
+            initialize_once(resources);return
+        except InitializationFailed:
+            if attempt:raise
+            log('Fresh initialization failed; one clean unload/PERST/reload retry in 5 seconds')
+            time.sleep(5)
+
+
+def main(check_only=False,hold_only=False):
     if os.geteuid(): raise RuntimeError('Run as root')
     lock = open('/run/gpu-recovery.lock','w')
     fcntl.flock(lock,fcntl.LOCK_EX | fcntl.LOCK_NB)
+    if hold_only:
+        hold_services();return
     if pathlib.Path('/sys/class/dmi/id/board_name').read_text().strip() != 'PRO Z690-A WIFI DDR4(MS-7D25)':
         raise RuntimeError('Motherboard mismatch')
     if (PCI/GPU).resolve().parent.name != BRIDGE:
@@ -139,46 +200,24 @@ def main(check_only=False):
     if check_only:
         log('Read-only compatibility checks passed: board, topology, kernel, NVIDIA binary, BAR allocation')
         return
-    units = [u for u in UNITS if userctl('is-active','--quiet',u)[0] == 0]
-    persist = run(['/usr/bin/systemctl','is-active','--quiet','nvidia-persistenced.service'],check=False)[0] == 0
     boot = pathlib.Path('/proc/sys/kernel/random/boot_id').read_text().strip()
     success = False
     try:
-        if units:
-            rc,out = userctl('stop',*units)
-            if rc: raise RuntimeError(f'Could not stop GPU services: {out}')
-        if persist: run(['/usr/bin/systemctl','stop','nvidia-persistenced.service'])
-        lost = reg(GPU,'VENDOR_ID') != '10de'
-        if lost:
-            pulse()
-            # Make the reset GPU readable to the old teardown path. Do not
-            # change ReBAR while the old driver exists.
-            restore_pci(resources,False)
-        unload()
-        # Start fresh after all old modules are gone, including any teardown
-        # firmware state. This is also the normal manual test path.
-        pulse()
-        restore_pci(resources,True)
-        if any(n.startswith('nvidia') for n in modules()):
-            raise RuntimeError('Unexpected driver autoload before PCI restoration completed')
-        run(['/usr/sbin/modprobe','nvidia','nvidia_uvm'],timeout=30)
-        rc,out = run([str(LIB/'cuda-probe')],timeout=30)
-        log(out)
-        if 'Transfer correctness check: passed' not in out:
-            raise RuntimeError('CUDA verification did not pass')
+        hold_services()
+        initialize_with_retry(resources)
         if pathlib.Path('/proc/sys/kernel/random/boot_id').read_text().strip() != boot:
             raise RuntimeError('Boot identity unexpectedly changed')
         success = True
         log(f'GPU recovery verified by CUDA; Linux boot unchanged: {boot}')
+        resume_services()
     finally:
-        if persist: run(['/usr/bin/systemctl','start','nvidia-persistenced.service'],check=False)
-        if units: userctl('start',*reversed(units))
-        if not success: log('Recovery failed; services restored, GPU unavailable. No reboot requested.')
+        if not success: log('Recovery failed; inference services remain stopped. No reboot requested.')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--check',action='store_true',help='Check compatibility without resetting hardware')
+    parser.add_argument('--hold-services',action='store_true',help='Stop GPU services and preserve desired state; no hardware reset')
     args = parser.parse_args()
-    try: main(args.check)
+    try: main(args.check,args.hold_services)
     except Exception as e:
         log(str(e));sys.exit(1)
