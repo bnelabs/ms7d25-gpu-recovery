@@ -4,7 +4,9 @@ After=systemd-journald.service
 
 [Service]
 Type=simple
+ExecStartPre=/usr/bin/python3 /usr/local/lib/gpu-recovery/qualify.py
 ExecStart=/usr/bin/python3 /usr/local/lib/gpu-recovery/watch.py
+TimeoutStartSec=240
 Restart=on-failure
 RestartSec=10
 TimeoutStopSec=360
