@@ -12,13 +12,23 @@ import threading
 import time
 
 RECOVERY='/usr/local/sbin/gpu-recover-ms7d25'
+HOLD_MARKER=pathlib.Path('/run/gpu-recovery-active')
+SERVICE_STATE=pathlib.Path('/var/lib/gpu-recovery/services.json')
 GPU='0000:01:00.0'
 UUID='GPU-8a9c05b3-fea1-4d89-5113-b56acbb1eba9'
+XID79 = re.compile(r'Xid\s*\(PCI:0000:01:00(?:\.0)?\):\s*79\b', re.I)
+
+def is_xid79(message):
+    return XID79.search(message) is not None
 
 def healthy():
-    result=subprocess.run(['/usr/bin/nvidia-smi','-i',GPU,'--query-gpu=uuid',
+    result=subprocess.run(['/usr/bin/nvidia-smi','-i',UUID,'--query-gpu=uuid',
                            '--format=csv,noheader'],capture_output=True,text=True,timeout=10)
     return result.returncode==0 and result.stdout.strip()==UUID
+
+
+def services_held():
+    return HOLD_MARKER.exists() or SERVICE_STATE.exists()
 
 
 class Controller:
@@ -48,33 +58,47 @@ class Controller:
         except subprocess.TimeoutExpired:
             self.hold();self.failed=True;self.pending_retry=False;self.save()
             print('GPU health query blocked; services held, no reset attempted',flush=True);return
-        if ok and not self.pending_retry and (not event or event_time is not None and event_time<=self.last_recovery_end):return
+        if ok and (not event or event_time is not None and event_time <= self.last_recovery_end):
+            if (self.pending_retry or self.failed) and not services_held():
+                # The adapter consumes the saved state only after CUDA and service restoration.
+                self.pending_retry = False
+                self.failed = False
+                self.next_attempt = 0
+                self.last_recovery_end = time.monotonic()
+                self.save()
+                print('GPU available and inference hold cleared. Canceled the pending recovery.', flush=True)
+            if not self.pending_retry:
+                return
         if not self.hold():self.failed=True;return
         now=time.monotonic()
         while self.attempts and now-self.attempts[0]>=3600:self.attempts.popleft()
         if self.pending_retry and now<self.next_attempt:return
-        if self.failed or len(self.attempts)>=3:
+        if self.failed:
             print('GPU recovery suppressed; inference services remain stopped',flush=True);return
+        if len(self.attempts)>=3:
+            self.pending_retry=True;self.next_attempt=self.attempts[0]+3600;self.save()
+            print('GPU recovery hourly limit reached; retry after cooldown, inference remains stopped',flush=True);return
         self.attempts.append(now);self.pending_retry=False;self.save()
         print('Recovering GPU after '+('Xid79' if event else 'failed health check'),flush=True)
         # Adapter bounds individual hardware calls and owns the lock. Never kill
         # it mid-PERST/teardown with an outer timeout.
         rc=subprocess.run([RECOVERY]).returncode
         self.last_recovery_end=time.monotonic()
-        if rc==75 and len(self.attempts)<3:
-            delay=(60,240)[len(self.attempts)-1]
+        if rc==75:
+            delay=(60,240)[len(self.attempts)-1] if len(self.attempts)<3 else max(60,self.attempts[0]+3600-self.last_recovery_end)
             self.pending_retry=True;self.next_attempt=self.last_recovery_end+delay
-            print(f'Completed PERST but GPU link not ready; retry scheduled in {delay}s, inference remains stopped',flush=True)
+            print(f'GPU link or firmware not ready after reset; retry scheduled in {delay}s, inference remains stopped',flush=True)
         else:
             self.failed=rc!=0;self.next_attempt=0
             if self.failed:print('Recovery failed without an eligible retry; inference remains stopped',flush=True)
         self.save()
     def hold(self):
         try:
-            result=subprocess.run([RECOVERY,'--hold-services'],timeout=120)
+            # The adapter bounds each service stop and saves the desired state before draining.
+            result=subprocess.run([RECOVERY,'--hold-services'])
             if result.returncode:raise RuntimeError('service hold failed')
             return True
-        except (subprocess.TimeoutExpired,RuntimeError) as exc:
+        except (OSError,RuntimeError) as exc:
             print('Cannot hold inference services: '+str(exc),flush=True);return False
 
 
@@ -98,7 +122,7 @@ def main():
             if line is None:raise RuntimeError('Kernel journal stream ended')
             try:entry=json.loads(line)
             except ValueError:continue
-            if not re.search(r'Xid\s*\(PCI:0000:01:00(?:\.0)?\):\s*79\b',entry.get('MESSAGE',''),re.I):continue
+            if not is_xid79(entry.get('MESSAGE','')):continue
             try:event_time=int(entry['__MONOTONIC_TIMESTAMP'])/1e6
             except (KeyError,ValueError,TypeError):event_time=None
             controller.check(True,event_time)

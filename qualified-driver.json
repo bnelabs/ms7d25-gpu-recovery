@@ -1,0 +1,108 @@
+{
+  "driver": "615.71.09",
+  "baseline_kernel": "7.0.0-38-generic",
+  "functions": {
+    "nvEvoMakeRoom": {
+      "size": 563,
+      "sha256": "0f16655b3d9ff9b1695544593792fb620b4f64c5dfcad734c54412ae18e22e95",
+      "relocations": [
+        [
+          118,
+          2,
+          "__x86_return_thunk",
+          -4
+        ],
+        [
+          164,
+          2,
+          "nvkms_get_usec",
+          -4
+        ],
+        [
+          208,
+          2,
+          "nvkms_yield",
+          -4
+        ],
+        [
+          265,
+          11,
+          ".rodata",
+          171032
+        ],
+        [
+          289,
+          2,
+          "nvEvoLogDev",
+          -4
+        ]
+      ]
+    },
+    "EvoCheckNotifier": {
+      "size": 335,
+      "sha256": "afa707bd2dcc1badd9f774d5ac17d680a4148a4a4029379234481441469be46f",
+      "relocations": [
+        [
+          160,
+          2,
+          "nvkms_yield",
+          -4
+        ],
+        [
+          181,
+          2,
+          "nvkms_get_usec",
+          -4
+        ],
+        [
+          260,
+          2,
+          "__x86_return_thunk",
+          -4
+        ],
+        [
+          289,
+          11,
+          ".rodata",
+          170976
+        ],
+        [
+          296,
+          2,
+          "nvEvoLogDisp",
+          -4
+        ],
+        [
+          327,
+          2,
+          "__x86_return_thunk",
+          -4
+        ]
+      ]
+    },
+    "nvkms_yield": {
+      "size": 20,
+      "sha256": "3b4adf22228107cdc1f96548cefc15a7638b4662b7d1898a2b989e903c93b4aa",
+      "relocations": [
+        [
+          1,
+          4,
+          "__fentry__",
+          -4
+        ],
+        [
+          10,
+          4,
+          "schedule",
+          -4
+        ],
+        [
+          16,
+          4,
+          "__x86_return_thunk",
+          -4
+        ]
+      ]
+    }
+  }
+}

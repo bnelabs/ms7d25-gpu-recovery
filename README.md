@@ -6,6 +6,16 @@ Server-specific recovery for an RTX 3090 after NVIDIA Xid79, using an independen
 
 This repository is private because its evidence includes the supplied boardview, firmware tables, and server logs. Do not republish third-party reference files without checking their licenses.
 
+## November 14 kernel and orchestration update
+
+The installed watcher now qualifies the NVIDIA EVO function bytes and ELF relocation targets against the proven 615.71.09 implementation, then builds the guarded helper for the running kernel before starting. This removes the old hard-coded `7.0.0-38` restriction without accepting changed driver instructions. Qualified artifacts are root-owned under `/var/lib/gpu-recovery/qualified/<kernel>`. Kernel headers must be installed; a changed NVIDIA implementation still requires code review.
+
+On `7.0.0-43-generic`, all three guarded functions and their relocation targets match the proven binary. Building and loading/unloading the unarmed helper passed. The actual lost-GPU teardown also completed using the helper. The GPU-only reset restored PCIe access, but this incident remains unrecovered: firmware stays at `GFW_BOOT 0x1`, and fresh CUDA initialization fails. No successful current-kernel CUDA recovery is claimed.
+
+The update also stops the shared inference gateway before its backends, preserves the running services, pauses the GPU power timer, and prevents udev from reloading modules or starting persistence/CDI during recovery. Vendor udev behavior remains unchanged outside the root-owned recovery marker. Recoverable link and firmware failures receive delayed retries and an hourly cooldown. Unsafe teardown or compatibility failures keep inference stopped. Successful recovery requires both full-buffer transfer correctness and an actual CUDA kernel correctness check before services resume.
+
+The November 14 update passes 25 unit tests. No reboot was performed. Detailed local evidence is in `/home/komedi/gpu-recovery-update/20261114`.
+
 ## Verified server
 
 | Item | Value |
@@ -15,12 +25,12 @@ This repository is private because its evidence includes the supplied boardview,
 | GPU | RTX 3090 GA102, PCI ID `10de:2204` |
 | GPU / audio | `0000:01:00.0`, `0000:01:00.1` |
 | Isolated root port | `0000:00:01.0` |
-| Kernel | `7.0.0-38-generic` |
+| Kernel | `7.0.0-38-generic` prior successful recovery; `7.0.0-43-generic` helper qualification and teardown validated, CUDA recovery still fails in the current incident |
 | NVIDIA open driver | `615.71.09` |
 | GPIO controller / line | `INTC1056:00`, `/dev/gpiochip0`, offset `354` |
 | Reset control | `GPP_E2`, physical pin `SATAXPCIE_2` |
 | GPU BAR1 allocation | 32 GiB |
-| GPU services | user `komedi`, UID `1000`, `llama-server.service`, `deepseek-harness.service` |
+| GPU services | user `komedi`, UID `1000`, shared inference gateway, llama.cpp, Strata Flash, Strata Coder, Maya, HyperQwen, DeepSeek Harness |
 
 SMBIOS reports motherboard version `1.0`; the supplied CAD is R1.1. The relevant GPIO was verified against the live controller and successfully reset the installed GPU. This does not establish compatibility for other PCB variants.
 
@@ -36,7 +46,7 @@ UTB1 pin 4 (AND output) -- PCI_E1 pin A11 (GPU PERST#)
 
 UTB1 is a `74LVC1G08GV`. Pulling `GPP_E2` low asserts only the GPU slot's reset gate. Restoring it high releases reset. This recovered a card whose PCI vendor ID and GPU MMIO both returned all ones. PCI BARs and Resizable BAR configuration then needed restoration, followed by fresh driver initialization.
 
-The old driver also hung while unloading. An incident-specific, guarded Kprobe helper released its stalled EVO queue/notifier waits. That helper is **experimental kernel intervention**, not an NVIDIA-supported driver fix. Its offsets and register assumptions are pinned to the verified module binary. The script checks the binary's SHA256 before changing anything; upgrades require revalidation.
+The old driver also hung while unloading. An incident-specific, guarded Kprobe helper released its stalled EVO queue/notifier waits. That helper is **experimental kernel intervention**, not an NVIDIA-supported driver fix. Its offsets and register assumptions are pinned to the verified module binary. Startup automatically compares the guarded function bytes and relocation targets, rebuilds the helper for the kernel, and pins the resulting driver/helper SHA256 values before recovery.
 
 ## Install on this exact server
 
@@ -67,7 +77,7 @@ sudo systemctl enable --now gpu-xid79-recovery.service
 sudo systemctl status gpu-xid79-recovery.service
 ```
 
-The watcher follows new kernel events and checks the expected GPU UUID through NVML every 15 seconds, including at startup. It holds inference services before recovery or suppression. It allows at most three adapter invocations per hour; each invocation permits at most one clean initialization retry. Completed-PERST link-readiness failures return status 75 and schedule bounded delayed retries; other failed recovery suppresses further automatic attempts until the watcher is restarted. Timeout/teardown failures do not trigger a retry. It never invokes reboot, shutdown, suspend, or hibernate.
+The watcher follows new kernel events and checks the expected GPU UUID through NVML every 15 seconds, including at startup. It holds inference services before recovery or suppression. It allows at most three adapter invocations per hour; each invocation permits at most one clean initialization retry. Completed-PERST link-readiness failures return status 75 and schedule bounded delayed retries; firmware initialization failures also schedule delayed retries. After three attempts in the rolling hour, the watcher waits for the hourly cooldown and retries automatically. Other failed recovery suppresses further automatic attempts until the watcher is restarted. Timeout/teardown failures do not trigger a retry. It never invokes reboot, shutdown, suspend, or hibernate.
 
 ```bash
 sudo journalctl -u gpu-xid79-recovery.service -f
@@ -83,16 +93,31 @@ sudo systemctl disable --now gpu-xid79-recovery.service
 ## Recovery sequence
 
 1. Verify motherboard, GPU, isolated PCI topology, kernel, module hash, and resource allocation; acquire an exclusive lock.
-2. Stop the previously active llama/Harness services and NVIDIA persistence service.
-3. If the GPU is electrically inaccessible, pulse its independent PERST line and restore memory decoding for old driver cleanup.
+2. Preserve desired services, mark recovery active, stop the shared gateway and each GPU backend, including HyperQwen, and pause persistence/CDI and the GPU power timer. The marker prevents udev from racing the driver sequence.
+3. If the GPU is electrically inaccessible, pulse its independent PERST line and restore memory decoding when PCI config access returns. If the first pulse completes and the vendor ID is still unreadable, allow a short settling interval and try one five-second pulse before beginning driver teardown. Each pulse verifies the GPIO assertion and release.
 4. Unload old NVIDIA modules. If an identified EVO wait stalls, attach the narrowly guarded helper to that unloading PID, permit individual validated exits, and remove the helper afterward. Abort on timeout or mismatch.
 5. With all old modules removed, pulse PERST again. Restore both GPU-function BARs and the original 32 GiB GPU Resizable BAR setting **before** loading a fresh driver.
-6. Load NVIDIA/CUDA modules; run a real CUDA transfer/correctness probe; confirm Linux boot ID is unchanged.
-7. Restore previously active services only after successful verification. On failure, retain their desired state in `/var/lib/gpu-recovery/services.json` and leave inference stopped.
+6. Load NVIDIA/CUDA modules under exclusive recovery control; require full-buffer transfer correctness and a real CUDA kernel result; confirm Linux boot ID is unchanged.
+7. After successful CUDA verification, refresh the NVIDIA Container Device Interface (CDI) spec, if installed, before restarting persistence and the previously active inference services. This prevents Docker from using stale device paths or a socket from the old persistence daemon. If service restoration fails, reapply the hold and retain the desired state in `/var/lib/gpu-recovery/services.json`.
 
 The helper does not preserve in-flight GPU work. It resets the host command ring to a valid empty state before abandoning a lost-GPU FIFO wait, avoiding the buffer-overrun risk of simply returning. Notifier waits return FALSE rather than manufacturing hardware completion. It acts only on the specified unloading PID and verified frame layouts.
 
+### Register additional inference services
+
+The built-in registry covers the shared gateway, its five GPU backends, and DeepSeek Harness. For another systemd-managed GPU workload, add its service unit to the root-owned `/etc/gpu-recovery/inference-services.json`. Use `user_services` for units in the `komedi` user manager and `system_services` for units in the system manager, including units that manage GPU containers.
+
+```json
+{
+  "user_services": ["deepseek-harness.service", "local-inference.service"],
+  "system_services": ["ollama.service"]
+}
+```
+
+Each field replaces its own default list. `gateway` identifies the user service that owns the shared queue, and `gateway_backends` lists its user service backends. Set `gateway` to `null` for a deployment with no shared gateway. The adapter saves active and starting services, stops the gateway first, then drains registered services in both scopes. After CUDA verification, it starts the saved standalone services. A returning gateway manages the startup of its own backends. Register each process through a unit whose stop action also stops its GPU workers.
+
 ## Tests and evidence
+
+On 2026-11-21 at 12:35:54 Istanbul time, the updated adapter recovered the RTX 3090 from a live Xid79 on `7.0.0-44-generic`. The standard pulse restored PCI access. Both CUDA checks passed on the same Linux boot, the CDI refresh completed before the gateway resumed, and a HyperQwen chat through the LAN gateway passed. The watcher cleared the pending retry and retained the rolling attempt history. The extended pulse branch has unit coverage and was unnecessary during this recovery.
 
 - Real Xid79: PCI vendor ID `ffff`, GPU `PMC_BOOT_0 = ffffffff`, link down, driver unload stuck for hours.
 - GPIO recovery: vendor ID became `10de`, link status `3104` (active Gen4 x16), `PMC_BOOT_0 = b72000a1`.
@@ -140,7 +165,7 @@ The failure/retry branches have controlled unit coverage. A new spontaneous Xid7
 
 The 15:36 Xid79 recurrence on 2026-10-15 exposed a gap in the previous policy: the first PERST completed, but the GPU did not answer within its three-second wait. The watcher treated that stage as terminal. A manual cycle five minutes later succeeded. Keeping inference stopped prevented CPU fallback, but automatic recovery was incomplete.
 
-The adapter now waits up to 15 seconds for PCI vendor-ID access after a completed pulse. If that bounded poll fails, it returns exit status 75. The watcher schedules retries after 60 seconds, then 240 seconds, subject to the remaining three-invocations-per-hour budget. It does not need another Xid event. Pending cooldown and attempt history persist across watcher restarts in the same boot. If NVML visibility returns while a retry is pending, the full scheduled recovery still runs so that CUDA verification and service restoration are completed.
+The adapter waits up to 15 seconds for PCI vendor-ID access after each completed pulse. If the pre-teardown pulse and its extended fallback both time out, it returns exit status 75. The watcher schedules retries after 60 seconds, then 240 seconds, subject to the remaining three-invocations-per-hour budget. It does not need another Xid event. Pending cooldown and attempt history persist across watcher restarts in the same boot. NVML visibility alone leaves the saved service hold in place. If a manual recovery has verified CUDA and restored services, the watcher clears the pending retry and retains the attempt history.
 
 GPIO operation failures, compatibility mismatches, blocked commands and teardown failures do not receive status 75 and are not retried by this path. Fresh initialization retains its existing single clean retry inside the adapter. Inference stays held until verification passes. The delayed retry timing is a policy based on the observed delayed manual success, not evidence that every lost link will recover at those intervals.
 

@@ -5,6 +5,11 @@
 
 #define CUDA_CHECK(call) do { const auto err = (call); if (err != cudaSuccess) { std::fprintf(stderr, "%s: %s\n", #call, cudaGetErrorString(err)); std::exit(1); } } while (0)
 
+__global__ void verify_execution(unsigned *values) {
+    unsigned i = blockIdx.x * blockDim.x + threadIdx.x;
+    if (i < 1024) values[i] = i * 17u + 7u;
+}
+
 int main() {
     cudaDeviceProp props{};
     CUDA_CHECK(cudaGetDeviceProperties(&props, 0));
@@ -37,9 +42,19 @@ int main() {
         CUDA_CHECK(cudaEventElapsedTime(&ms, start, stop));
         std::printf("%s: %.3f GB/s (payload only)\n", names[test], bytes * double(repeats) / (ms * 1e6));
     }
-    unsigned char check;
-    CUDA_CHECK(cudaMemcpy(&check, second, 1, cudaMemcpyDeviceToHost));
-    if (check != 42) return 2;
+    CUDA_CHECK(cudaMemcpy(host, second, bytes, cudaMemcpyDeviceToHost));
+    for (size_t i = 0; i < bytes; ++i) {
+        if (static_cast<unsigned char *>(host)[i] != 42) return 2;
+    }
+    verify_execution<<<4,256>>>(static_cast<unsigned *>(device));
+    CUDA_CHECK(cudaGetLastError());
+    CUDA_CHECK(cudaDeviceSynchronize());
+    unsigned computed[1024];
+    CUDA_CHECK(cudaMemcpy(computed, device, sizeof(computed), cudaMemcpyDeviceToHost));
+    for (unsigned i = 0; i < 1024; ++i) {
+        if (computed[i] != i * 17u + 7u) return 3;
+    }
+    std::puts("Kernel correctness check: passed");
     CUDA_CHECK(cudaEventDestroy(start));
     CUDA_CHECK(cudaEventDestroy(stop));
     CUDA_CHECK(cudaFree(device));

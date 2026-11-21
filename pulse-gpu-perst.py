@@ -1,12 +1,16 @@
 #!/usr/bin/python3
-"""Manual experimental PCI_E1 PERST pulse for MSI MS-7D25. Not a recovery claim."""
-import fcntl, os, pathlib, signal, struct, time
+"""Pulse the verified MSI MS-7D25 PCI_E1 reset gate and check GPIO readback."""
+import argparse, fcntl, os, pathlib, signal, struct, time
 
 def interrupted(signum, frame):
     raise SystemExit(f'Interrupted by signal {signum}')
 
 for sig in (signal.SIGINT, signal.SIGTERM, signal.SIGHUP):
     signal.signal(sig, interrupted)
+
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--hold-seconds', type=int, choices=(1, 5), default=1)
+args = parser.parse_args()
 
 board = pathlib.Path('/sys/class/dmi/id/board_name').read_text().strip()
 if board != 'PRO Z690-A WIFI DDR4(MS-7D25)':
@@ -39,14 +43,19 @@ try:
     def set_value(value):
         data = bytearray([value]) + bytearray(63)
         fcntl.ioctl(handle, 0xc040b409, data)
+    def verify(phase, expected):
+        value = get()
+        print(f'GPP_E2 {phase}: {value}', flush=True)
+        if value != expected:
+            raise RuntimeError(f'Unexpected GPP_E2 readback {phase}: expected {expected}, got {value}')
     try:
-        print('GPP_E2 before pulse:', get(), flush=True)
+        verify('before pulse', 1)
         set_value(0)
-        print('GPP_E2 asserted:', get(), flush=True)
-        time.sleep(1)
+        verify('asserted', 0)
+        time.sleep(args.hold_seconds)
     finally:
         set_value(1)
-        print('GPP_E2 released:', get(), flush=True)
+        verify('released', 1)
 finally:
     if handle is not None:
         os.close(handle)
